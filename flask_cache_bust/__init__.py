@@ -27,8 +27,9 @@ def init_cache_busting(app):
                 version = hashlib.md5(f.read()).hexdigest()[:7]
 
             # add version
-            unbusted = os.path.relpath(rooted_filename, static_folder)
-            busted = os.path.join(version, unbusted)
+            # Replace \ with /, since web URLs will always use / (fixes issues on Windows)
+            unbusted = os.path.relpath(rooted_filename, static_folder).replace('\\', '/')
+            busted = os.path.join(version, unbusted).replace('\\', '/')
 
             # save computation to tables
             bust_table[unbusted] = busted
